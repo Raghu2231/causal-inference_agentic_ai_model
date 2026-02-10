@@ -1,8 +1,19 @@
 import { useMemo, useState } from "react";
+import KpiCard from "./components/KpiCard";
 import EdaDashboard from "./pages/EdaDashboard";
 import PathDashboard from "./pages/PathDashboard";
 import UploadPage from "./pages/UploadPage";
 import { fetchEda, runModel, uploadExcel } from "./services/apiClient";
+
+function downloadJson(filename, payload) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 export default function App() {
   const [fileId, setFileId] = useState(null);
@@ -66,9 +77,20 @@ export default function App() {
 
       <EdaDashboard eda={eda} />
 
+      {eda && (
+        <div className="card">
+          <h2>Downloadable EDA Summary</h2>
+          <button onClick={() => downloadJson("eda_summary.json", eda)}>Download EDA JSON</button>
+        </div>
+      )}
+
       {fileId && (
         <div className="card">
           <h2>Model Execution</h2>
+          <div className="grid">
+            <KpiCard label="Scenario multiplier" value={String(scenarioMultiplier)} />
+            <KpiCard label="Isolated channel" value={isolateChannel || "All channels"} />
+          </div>
           <label>
             Scenario multiplier
             <input
@@ -94,6 +116,13 @@ export default function App() {
           <button onClick={handleRunModel} disabled={loading}>
             Run Path A + Path B
           </button>
+        </div>
+      )}
+
+      {summary && (
+        <div className="card">
+          <h2>Downloadable Final Summary</h2>
+          <button onClick={() => downloadJson("lift_summary.json", summary)}>Download Lift Summary JSON</button>
         </div>
       )}
 

@@ -32,9 +32,14 @@ class PathAPropensityModel:
         cols = [c for c in feature_cols if c != action_col]
         X = df[cols]
         y = df[action_col]
+
+        if len(np.unique(y)) < 2:
+            p = pd.Series(np.repeat(float(y.iloc[0]), len(y)), index=df.index)
+            return PathAPropensityResult(propensity_scores=p, metrics={"auc": 0.5})
+
         self.model.fit(X, y)
         p = self.model.predict_proba(X)[:, 1]
-        auc = roc_auc_score(y, p) if len(np.unique(y)) > 1 else 0.5
+        auc = roc_auc_score(y, p)
         return PathAPropensityResult(propensity_scores=pd.Series(p, index=df.index), metrics={"auc": float(auc)})
 
     def save(self, path: str) -> None:

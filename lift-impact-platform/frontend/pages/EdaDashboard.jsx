@@ -34,6 +34,18 @@ export default function EdaDashboard({ eda }) {
           useResizeHandler
         />
       )}
+      <details>
+        <summary>Missing values</summary>
+        <pre>{JSON.stringify(eda.missing_values, null, 2)}</pre>
+      </details>
+      <details>
+        <summary>Distribution checks</summary>
+        <pre>{JSON.stringify(eda.distributions, null, 2)}</pre>
+      </details>
+      <details>
+        <summary>Correlation heatmap matrix</summary>
+        <pre>{JSON.stringify(eda.correlation_heatmap, null, 2)}</pre>
+      </details>
     </div>
   );
 }

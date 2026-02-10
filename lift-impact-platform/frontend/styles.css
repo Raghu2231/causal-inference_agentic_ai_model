@@ -61,6 +61,7 @@ select {
   border: 1px solid #f7bbbb;
   padding: 10px;
   border-radius: 6px;
+  margin-bottom: 12px;
 }
 
 .success {
@@ -69,4 +70,5 @@ select {
   border: 1px solid #bae8c4;
   padding: 10px;
   border-radius: 6px;
+  margin-bottom: 12px;
 }
