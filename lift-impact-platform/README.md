@@ -88,6 +88,8 @@ Pages implemented:
 
 ### 1) Backend
 
+**macOS/Linux (bash)**
+
 ```bash
 cd lift-impact-platform
 python -m venv .venv
@@ -96,10 +98,39 @@ pip install -r requirements.txt
 uvicorn backend.api.main:app --reload --port 8000
 ```
 
+**Windows PowerShell**
+
+```powershell
+cd .\lift-impact-platform
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn backend.api.main:app --reload --port 8000
+```
+
+If `Activate.ps1` is missing, create the environment first with `python -m venv .venv`; the activation file is generated under `.venv\Scripts\Activate.ps1` (not in `backend/`).
+
+You can also run the helper script:
+
+```powershell
+cd .\lift-impact-platform
+.\backend\start_backend.ps1
+```
+
 ### 2) Frontend (React + Node.js)
+
+**macOS/Linux (bash)**
 
 ```bash
 cd lift-impact-platform/frontend
+npm install
+npm run dev
+```
+
+**Windows PowerShell**
+
+```powershell
+cd .\lift-impact-platform\frontend
 npm install
 npm run dev
 ```
