@@ -50,6 +50,15 @@ export async function uploadExcel(file, onProgress) {
   }
 }
 
+export async function fetchPreview(fileId) {
+  try {
+    const response = await api.get(`/preview/${fileId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(extractError(error));
+  }
+}
+
 export async function fetchEda(fileId) {
   try {
     const response = await api.get(`/eda/${fileId}`);

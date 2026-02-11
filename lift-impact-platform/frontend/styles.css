@@ -204,3 +204,22 @@ select {
 .muted {
   color: #4f6386;
 }
+
+
+.tabbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: #eaf1ff;
+  color: #18315f;
+  border: 1px solid #bfd0f1;
+}
+
+.tab-btn-active {
+  background: #2463eb;
+  color: #fff;
+  border-color: #2463eb;
+}

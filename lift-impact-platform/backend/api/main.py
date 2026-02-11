@@ -11,6 +11,7 @@ from backend.eda.analyzer import run_eda
 from backend.services.lift_engine import LiftComputationEngine
 from backend.services.session_store import DATASETS
 from backend.utils.schema_detection import apply_schema_defaults, detect_schema, schema_to_dict
+from backend.utils.variable_partition import partition_variables
 from data_contracts.contracts import RunRequest
 
 app = FastAPI(title="Lift Impact Platform API")
@@ -47,6 +48,24 @@ async def upload_excel(file: UploadFile = File(...)) -> dict:
     DATASETS[file_id] = prepared_df
     return {"file_id": file_id, "schema": schema_to_dict(schema), "rows": len(prepared_df)}
 
+
+
+
+@app.get("/preview/{file_id}")
+def preview(file_id: str) -> dict:
+    if file_id not in DATASETS:
+        raise HTTPException(status_code=404, detail="file_id not found")
+
+    df = DATASETS[file_id]
+    schema = schema_to_dict(detect_schema(df))
+    groups = partition_variables(df, schema)
+    return {
+        "schema": schema,
+        "groups": groups,
+        "shape": {"rows": int(df.shape[0]), "columns": int(df.shape[1])},
+        "sample": df.head(20).to_dict(orient="records"),
+        "columns": list(df.columns),
+    }
 
 @app.get("/eda/{file_id}")
 def eda(file_id: str) -> dict:

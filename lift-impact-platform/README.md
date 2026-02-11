@@ -36,7 +36,8 @@ Chaining Path A to Path B translates suggestion-driven behavior lift into outcom
 ## How lift is chained
 
 1. Upload Excel and detect suggestions, actions, outcomes, time, HCP ID, Rep ID.
-2. Run EDA (trends, conversion, missingness, distributions, correlations).
+2. Review schema/data preview and variable grouping into treatment/covariate/confounder buckets.
+3. Run EDA (trends, conversion, missingness, distributions, correlations).
 3. Build transformation layer (indicators, lags/windows, normalization, one-hot encoding).
 4. Run Path A propensity + treatment effect models to estimate incremental actions.
 5. Run Path B outcome-lift model using incremental actions and controls.
@@ -163,6 +164,7 @@ Expected response: `{"status":"ok"}`.
 ## API overview
 
 - `POST /upload` — upload Excel and detect schema
+- `GET /preview/{file_id}` — schema preview + variable partition + sample rows
 - `GET /eda/{file_id}` — EDA outputs
 - `POST /run/{file_id}` — run Path A + Path B and return lift summary
 
