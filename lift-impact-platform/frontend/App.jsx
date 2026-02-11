@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import KpiCard from "./components/KpiCard";
 import EdaDashboard from "./pages/EdaDashboard";
 import PathDashboard from "./pages/PathDashboard";
 import UploadPage from "./pages/UploadPage";
-import { fetchEda, runModel, uploadExcel } from "./services/apiClient";
+import { fetchEda, pingBackend, runModel, uploadExcel } from "./services/apiClient";
 
 function downloadJson(filename, payload) {
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -24,6 +24,19 @@ export default function App() {
   const [error, setError] = useState("");
   const [scenarioMultiplier, setScenarioMultiplier] = useState(1.0);
   const [isolateChannel, setIsolateChannel] = useState("");
+  const [backendReady, setBackendReady] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    pingBackend().then((ok) => {
+      if (mounted) {
+        setBackendReady(ok);
+      }
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const actionOptions = useMemo(() => schema?.action_cols || [], [schema]);
 
@@ -66,7 +79,12 @@ export default function App() {
       {error && <div className="error">{error}</div>}
       {fileId && <div className="success">Loaded file_id: {fileId}</div>}
 
-      <UploadPage onUpload={handleUpload} loading={loading} />
+      <UploadPage
+        onUpload={handleUpload}
+        loading={loading}
+        backendReady={backendReady}
+        onRetryBackend={async () => setBackendReady(await pingBackend())}
+      />
 
       {schema && (
         <div className="card">
