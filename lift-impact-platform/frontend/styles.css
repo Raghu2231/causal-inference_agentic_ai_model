@@ -1,8 +1,12 @@
+:root {
+  color-scheme: light;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f7fb;
-  color: #14213d;
+  font-family: Inter, Arial, sans-serif;
+  background: linear-gradient(135deg, #eef3ff, #f8fbff);
+  color: #13223c;
 }
 
 .page {
@@ -13,10 +17,70 @@ body {
 
 .card {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(20, 33, 61, 0.08);
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-pill {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.status-online {
+  color: #0b5d1e;
+  background: #ebffef;
+  border: 1px solid #bae8c4;
+}
+
+.status-offline {
+  color: #a10000;
+  background: #ffe8e8;
+  border: 1px solid #f7bbbb;
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.step {
+  border: 1px solid #d8e1ef;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  background: #f7faff;
+}
+
+.step span {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: 1px solid #c2d2f1;
+}
+
+.step p {
+  margin: 8px 0 0;
+  font-weight: 600;
+}
+
+.step-active {
+  background: #ecf3ff;
+  border-color: #8bb1ff;
 }
 
 .grid {
@@ -55,6 +119,55 @@ select {
   margin-bottom: 10px;
 }
 
+.dropzone {
+  border: 2px dashed #a9c1ef;
+  border-radius: 12px;
+  padding: 16px;
+  background: #f8fbff;
+  transition: all 0.2s ease;
+}
+
+.dropzone-active {
+  border-color: #2c67e3;
+  background: #edf4ff;
+}
+
+.dropzone-disabled {
+  opacity: 0.7;
+}
+
+.dropzone-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.progress-wrap {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #e7edfa;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2a67f2, #1ea5fc);
+}
+
+.lift-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.lift-table th,
+.lift-table td {
+  border: 1px solid #d8e1ef;
+  padding: 8px;
+  vertical-align: top;
+}
+
 .error {
   color: #a10000;
   background: #ffe8e8;
@@ -86,4 +199,8 @@ select {
   background: #ffeac2;
   padding: 1px 4px;
   border-radius: 4px;
+}
+
+.muted {
+  color: #4f6386;
 }

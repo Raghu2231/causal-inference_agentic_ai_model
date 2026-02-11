@@ -15,6 +15,8 @@ function downloadJson(filename, payload) {
   URL.revokeObjectURL(url);
 }
 
+const STEPS = ["Upload", "EDA", "Run Models", "Review Lift"];
+
 export default function App() {
   const [fileId, setFileId] = useState(null);
   const [schema, setSchema] = useState(null);
@@ -25,31 +27,44 @@ export default function App() {
   const [scenarioMultiplier, setScenarioMultiplier] = useState(1.0);
   const [isolateChannel, setIsolateChannel] = useState("");
   const [backendReady, setBackendReady] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     let mounted = true;
-    pingBackend().then((ok) => {
+    const check = async () => {
+      const ok = await pingBackend();
       if (mounted) {
         setBackendReady(ok);
       }
-    });
+    };
+    check();
+    const intervalId = setInterval(check, 10000);
     return () => {
       mounted = false;
+      clearInterval(intervalId);
     };
   }, []);
 
   const actionOptions = useMemo(() => schema?.action_cols || [], [schema]);
+  const currentStep = summary ? 3 : fileId ? 2 : eda ? 1 : 0;
 
   const handleUpload = async (file) => {
     setLoading(true);
     setError("");
+    setUploadProgress(0);
+    setSummary(null);
     try {
-      const payload = await uploadExcel(file);
+      const ok = await pingBackend();
+      setBackendReady(ok);
+      if (!ok) {
+        throw new Error("Backend is not reachable. Start backend and retry upload.");
+      }
+      const payload = await uploadExcel(file, (value) => setUploadProgress(value));
       setFileId(payload.file_id);
       setSchema(payload.schema);
-      setSummary(null);
       const edaPayload = await fetchEda(payload.file_id);
       setEda(edaPayload);
+      setUploadProgress(100);
     } catch (uploadError) {
       setError(uploadError.message);
     } finally {
@@ -75,7 +90,25 @@ export default function App() {
 
   return (
     <div className="page">
-      <h1>Lift Impact Platform</h1>
+      <header className="hero card">
+        <div>
+          <h1>Lift Impact Platform</h1>
+          <p className="muted">Suggestions → Actions → Outcomes with Path A and Path B causal lift modeling.</p>
+        </div>
+        <div className={`status-pill ${backendReady ? "status-online" : "status-offline"}`}>
+          {backendReady ? "Backend connected" : "Backend offline"}
+        </div>
+      </header>
+
+      <div className="stepper card">
+        {STEPS.map((label, index) => (
+          <div key={label} className={`step ${index <= currentStep ? "step-active" : ""}`}>
+            <span>{index + 1}</span>
+            <p>{label}</p>
+          </div>
+        ))}
+      </div>
+
       {error && <div className="error">{error}</div>}
       {fileId && <div className="success">Loaded file_id: {fileId}</div>}
 
@@ -83,6 +116,7 @@ export default function App() {
         onUpload={handleUpload}
         loading={loading}
         backendReady={backendReady}
+        uploadProgress={uploadProgress}
         onRetryBackend={async () => setBackendReady(await pingBackend())}
       />
 

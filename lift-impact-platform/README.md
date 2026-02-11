@@ -144,6 +144,8 @@ VITE_API_TIMEOUT_MS=120000
 VITE_UPLOAD_TIMEOUT_MS=180000
 ```
 
+The upload page includes backend health status, drag-and-drop upload, and a progress bar for large Excel files.
+
 If the UI shows `Request timed out while connecting to http://localhost:8000`, verify backend availability first:
 
 ```bash

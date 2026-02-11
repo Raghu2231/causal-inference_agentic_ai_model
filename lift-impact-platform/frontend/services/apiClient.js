@@ -31,13 +31,18 @@ export async function pingBackend() {
   }
 }
 
-export async function uploadExcel(file) {
+export async function uploadExcel(file, onProgress) {
   const form = new FormData();
   form.append("file", file, file.name);
   try {
     const response = await api.post("/upload", form, {
-      headers: { "Content-Type": "multipart/form-data" },
       timeout: UPLOAD_TIMEOUT_MS,
+      onUploadProgress: (evt) => {
+        if (!onProgress) return;
+        const total = evt.total || 0;
+        const percent = total > 0 ? Math.round((evt.loaded / total) * 100) : 0;
+        onProgress(percent);
+      },
     });
     return response.data;
   } catch (error) {
