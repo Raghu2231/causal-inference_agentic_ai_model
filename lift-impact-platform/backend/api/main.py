@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.eda.analyzer import run_eda
 from backend.services.lift_engine import LiftComputationEngine
 from backend.services.session_store import DATASETS
-from backend.utils.schema_detection import detect_schema, schema_to_dict
+from backend.utils.schema_detection import apply_schema_defaults, detect_schema, schema_to_dict
 from data_contracts.contracts import RunRequest
 
 app = FastAPI(title="Lift Impact Platform API")
@@ -37,10 +37,15 @@ async def upload_excel(file: UploadFile = File(...)) -> dict:
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Invalid Excel upload: {exc}")
 
-    schema = detect_schema(df)
+    try:
+        schema = detect_schema(df)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+    prepared_df = apply_schema_defaults(df, schema)
     file_id = str(uuid4())
-    DATASETS[file_id] = df
-    return {"file_id": file_id, "schema": schema_to_dict(schema), "rows": len(df)}
+    DATASETS[file_id] = prepared_df
+    return {"file_id": file_id, "schema": schema_to_dict(schema), "rows": len(prepared_df)}
 
 
 @app.get("/eda/{file_id}")

@@ -123,6 +123,16 @@ export default function App() {
       {schema && (
         <div className="card">
           <h2>Detected Schema</h2>
+          {!!schema.warnings?.length && (
+            <div className="warning">
+              <strong>Auto-detection notes:</strong>
+              <ul>
+                {schema.warnings.map((warning) => (
+                  <li key={warning}>{warning}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           <pre>{JSON.stringify(schema, null, 2)}</pre>
         </div>
       )}

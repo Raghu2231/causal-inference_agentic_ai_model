@@ -10,7 +10,7 @@ from backend.models.path_a.propensity import PathAPropensityModel
 from backend.models.path_a.treatment_effect import PathATreatmentEffectModel
 from backend.models.path_b.outcome_lift import PathBOutcomeLiftModel
 from backend.transformations.feature_engineering import build_features
-from backend.utils.schema_detection import detect_schema, schema_to_dict
+from backend.utils.schema_detection import apply_schema_defaults, detect_schema, schema_to_dict
 
 
 class LiftComputationEngine:
@@ -21,7 +21,8 @@ class LiftComputationEngine:
     def run(self, raw_df: pd.DataFrame, scenario_multiplier: float = 1.0, isolate_channel: str | None = None) -> Dict:
         schema = detect_schema(raw_df)
         schema_dict = schema_to_dict(schema)
-        transformed = build_features(raw_df, schema)
+        prepared_df = apply_schema_defaults(raw_df, schema)
+        transformed = build_features(prepared_df, schema)
         model_df = transformed.data
 
         pa_prop = PathAPropensityModel()
@@ -37,10 +38,10 @@ class LiftComputationEngine:
 
         model_df["incremental_actions"] = path_a_result.incremental_action_by_row * scenario_multiplier
         if isolate_channel and isolate_channel in schema.action_cols:
-            ch_weight = (raw_df[isolate_channel] / raw_df[schema.action_cols].sum(axis=1).replace(0, 1)).fillna(0)
+            ch_weight = (prepared_df[isolate_channel] / prepared_df[schema.action_cols].sum(axis=1).replace(0, 1)).fillna(0)
             model_df["incremental_actions"] *= ch_weight
 
-        trx_col = next(c for c in schema.outcome_cols if "trx" in c.lower())
+        trx_col = next((c for c in schema.outcome_cols if "trx" in c.lower() and "nbrx" not in c.lower()), schema.outcome_cols[0])
         nbrx_col = next((c for c in schema.outcome_cols if "nbrx" in c.lower()), trx_col)
 
         pb = PathBOutcomeLiftModel()
