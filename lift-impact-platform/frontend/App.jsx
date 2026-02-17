@@ -31,6 +31,7 @@ export default function App() {
   const [isolateChannel, setIsolateChannel] = useState("");
   const [backendReady, setBackendReady] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [edaLoading, setEdaLoading] = useState(false);
 
   useEffect(() => {
     pingBackend().then(setBackendReady);
@@ -55,8 +56,7 @@ export default function App() {
       setSchema(payload.schema);
       const previewPayload = await fetchPreview(payload.file_id);
       setPreview(previewPayload);
-      const edaPayload = await fetchEda(payload.file_id);
-      setEda(edaPayload);
+      setEda(null);
       setActiveTab("Schema & Variables");
     } catch (uploadError) {
       setError(uploadError.message);
@@ -65,6 +65,22 @@ export default function App() {
     }
   };
 
+
+
+  const handleLoadEda = async () => {
+    if (!fileId) return;
+    setEdaLoading(true);
+    setError("");
+    try {
+      const edaPayload = await fetchEda(fileId);
+      setEda(edaPayload);
+      setActiveTab("EDA");
+    } catch (edaError) {
+      setError(edaError.message);
+    } finally {
+      setEdaLoading(false);
+    }
+  };
 
   const handleGenerateInsights = async () => {
     if (!fileId || !summary) return;
@@ -166,10 +182,28 @@ export default function App() {
             <summary>Schema JSON</summary>
             <pre>{JSON.stringify(preview.schema, null, 2)}</pre>
           </details>
+          <div className="btn-row">
+            <button onClick={handleLoadEda} disabled={edaLoading}>
+              {edaLoading ? "Loading EDA..." : "Load EDA Summary"}
+            </button>
+          </div>
         </div>
       )}
 
-      {activeTab === "EDA" && <EdaDashboard eda={eda} />}
+      {activeTab === "EDA" && (
+        <>
+          {!eda && (
+            <div className="card">
+              <h2>EDA Dashboard</h2>
+              <p>EDA has not been loaded yet for this file.</p>
+              <button onClick={handleLoadEda} disabled={edaLoading}>
+                {edaLoading ? "Loading EDA..." : "Load EDA Summary"}
+              </button>
+            </div>
+          )}
+          <EdaDashboard eda={eda} />
+        </>
+      )}
 
       {activeTab === "Modeling" && fileId && (
         <>

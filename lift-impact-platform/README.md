@@ -162,9 +162,12 @@ Optional frontend API override and timeout tuning:
 VITE_API_BASE_URL=http://localhost:8000
 VITE_API_TIMEOUT_MS=120000
 VITE_UPLOAD_TIMEOUT_MS=180000
+VITE_EDA_TIMEOUT_MS=300000
 ```
 
 The upload page includes backend health status, drag-and-drop upload, and a progress bar for large Excel files.
+
+For large datasets, EDA is loaded separately via **Load EDA Summary** after upload to avoid upload-step timeouts.
 
 If the UI shows `Request timed out while connecting to http://localhost:8000`, verify backend availability first:
 
