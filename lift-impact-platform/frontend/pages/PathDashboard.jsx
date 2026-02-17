@@ -12,7 +12,7 @@ export default function PathDashboard({ summary }) {
 
   const pathA = summary.path_a || {};
   const pathB = summary.path_b || {};
-  const channelLift = pathA.lift_per_channel || {};
+  const channelLift = pathA.channel_lift || {};
   const channelKeys = Object.keys(channelLift);
 
   return (

@@ -79,3 +79,13 @@ export async function runModel(fileId, scenarioMultiplier, isolateChannel) {
     throw new Error(extractError(error));
   }
 }
+
+
+export async function fetchInsights(fileId, summary, context = "") {
+  try {
+    const response = await api.post(`/insights/${fileId}`, { summary, context });
+    return response.data;
+  } catch (error) {
+    throw new Error(extractError(error));
+  }
+}

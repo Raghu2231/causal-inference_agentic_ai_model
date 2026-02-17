@@ -3,7 +3,7 @@ import KpiCard from "./components/KpiCard";
 import EdaDashboard from "./pages/EdaDashboard";
 import PathDashboard from "./pages/PathDashboard";
 import UploadPage from "./pages/UploadPage";
-import { fetchEda, fetchPreview, pingBackend, runModel, uploadExcel } from "./services/apiClient";
+import { fetchEda, fetchInsights, fetchPreview, pingBackend, runModel, uploadExcel } from "./services/apiClient";
 
 function downloadJson(filename, payload) {
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -24,6 +24,7 @@ export default function App() {
   const [preview, setPreview] = useState(null);
   const [eda, setEda] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [scenarioMultiplier, setScenarioMultiplier] = useState(1.0);
@@ -42,6 +43,7 @@ export default function App() {
     setError("");
     setUploadProgress(0);
     setSummary(null);
+    setInsights(null);
     try {
       const ok = await pingBackend();
       setBackendReady(ok);
@@ -63,6 +65,21 @@ export default function App() {
     }
   };
 
+
+  const handleGenerateInsights = async () => {
+    if (!fileId || !summary) return;
+    setLoading(true);
+    setError("");
+    try {
+      const insightPayload = await fetchInsights(fileId, summary, "Generate tactical insights for field execution.");
+      setInsights(insightPayload);
+    } catch (insightError) {
+      setError(insightError.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleRunModel = async () => {
     if (!fileId) return;
     setLoading(true);
@@ -70,6 +87,7 @@ export default function App() {
     try {
       const runPayload = await runModel(fileId, scenarioMultiplier, isolateChannel || null);
       setSummary(runPayload.summary);
+      setInsights(null);
     } catch (runError) {
       setError(runError.message);
     } finally {
@@ -190,7 +208,21 @@ export default function App() {
           {summary && (
             <div className="card">
               <h2>Downloadable Final Summary</h2>
-              <button onClick={() => downloadJson("lift_summary.json", summary)}>Download Lift Summary JSON</button>
+              <div className="btn-row">
+                <button onClick={() => downloadJson("lift_summary.json", summary)}>Download Lift Summary JSON</button>
+                <button onClick={handleGenerateInsights} disabled={loading}>Generate AI Insights</button>
+              </div>
+            </div>
+          )}
+          {insights && (
+            <div className="card">
+              <h2>Automated Insights ({insights.source})</h2>
+              <p>{insights.narrative}</p>
+              <ul>
+                {(insights.bullets || []).map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
+              </ul>
             </div>
           )}
           <PathDashboard summary={summary} />

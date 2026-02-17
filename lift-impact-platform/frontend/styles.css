@@ -223,3 +223,10 @@ select {
   color: #fff;
   border-color: #2463eb;
 }
+
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}

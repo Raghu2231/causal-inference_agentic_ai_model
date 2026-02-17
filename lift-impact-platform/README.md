@@ -167,9 +167,23 @@ Expected response: `{"status":"ok"}`.
 - `GET /preview/{file_id}` — schema preview + variable partition + sample rows
 - `GET /eda/{file_id}` — EDA outputs
 - `POST /run/{file_id}` — run Path A + Path B and return lift summary
+- `POST /insights/{file_id}` — generate automated narrative insights from model outputs (LLM-backed with fallback)
 
 ## Notes
 
 - Models are end-to-end runnable and persist artifacts.
 - Supports scenario multiplier and channel isolation.
 - Includes automated pipeline test scaffold in `tests/test_pipeline.py`.
+
+
+## Optional LLM integration for automated insights
+
+Set these backend environment variables to enable LLM-generated narrative insights:
+
+```bash
+LLM_API_URL=<chat-completions-endpoint>
+LLM_API_KEY=<api-key-if-required>
+LLM_MODEL=gpt-4o-mini
+```
+
+If these are not configured, the platform automatically returns rule-based insights derived from Path A/Path B lift metrics.

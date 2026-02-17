@@ -8,11 +8,12 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.eda.analyzer import run_eda
+from backend.services.insight_generator import InsightGenerator
 from backend.services.lift_engine import LiftComputationEngine
 from backend.services.session_store import DATASETS
 from backend.utils.schema_detection import apply_schema_defaults, detect_schema, schema_to_dict
 from backend.utils.variable_partition import partition_variables
-from data_contracts.contracts import RunRequest
+from data_contracts.contracts import InsightRequest, RunRequest
 
 app = FastAPI(title="Lift Impact Platform API")
 app.add_middleware(
@@ -23,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 engine = LiftComputationEngine()
+insight_generator = InsightGenerator()
 
 
 @app.get("/health")
@@ -85,3 +87,16 @@ def run(file_id: str, request: RunRequest) -> dict:
         isolate_channel=request.isolate_channel,
     )
     return {"summary": summary}
+
+
+@app.post("/insights/{file_id}")
+def insights(file_id: str, request: InsightRequest) -> dict:
+    if file_id not in DATASETS:
+        raise HTTPException(status_code=404, detail="file_id not found")
+
+    summary = request.summary
+    if summary is None:
+        summary = engine.run(DATASETS[file_id])
+
+    insight = insight_generator.generate(summary, prompt_context=request.context)
+    return {"narrative": insight.narrative, "bullets": insight.bullets, "source": insight.source}

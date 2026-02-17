@@ -12,3 +12,14 @@ class RunRequest(BaseModel):
 
 class RunResponse(BaseModel):
     summary: Dict[str, Any]
+
+
+class InsightRequest(BaseModel):
+    summary: Optional[Dict[str, Any]] = None
+    context: str = ""
+
+
+class InsightResponse(BaseModel):
+    narrative: str
+    bullets: list[str]
+    source: str
