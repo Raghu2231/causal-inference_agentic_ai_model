@@ -163,6 +163,15 @@ export default function App() {
               </ul>
             </div>
           )}
+          <div className="warning">
+            <strong>Model-input disclaimer (guidance only):</strong>
+            <ul>
+              <li><b>Path A Propensity</b>: predicts action uptake (`treated_action`) from engineered behavior/context features.</li>
+              <li><b>Path A Treatment Effect</b>: estimates uplift in `action_total` using `treated_suggestion` plus propensity score and engineered signals.</li>
+              <li><b>Path B Outcome Lift</b>: estimates incremental TRX/NBRX from action-driven features and baseline controls.</li>
+              <li>Final variable assignment should be reviewed by analytics owner before production decisions.</li>
+            </ul>
+          </div>
           <div className="grid">
             <KpiCard label="Rows" value={String(preview.shape?.rows ?? 0)} />
             <KpiCard label="Columns" value={String(preview.shape?.columns ?? 0)} />

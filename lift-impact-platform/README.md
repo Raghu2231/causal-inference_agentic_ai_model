@@ -171,6 +171,8 @@ The upload page includes backend health status, drag-and-drop upload, and a prog
 
 For large datasets, EDA is loaded separately via **Load EDA Summary** after upload to avoid upload-step timeouts.
 
+EDA includes per-variable statistics (mean/std/quartiles) and a feature-engineering diagnostic view (lags/rolling/adstock summaries) for model-readiness checks.
+
 If the UI shows `Request timed out while connecting to http://localhost:8000`, verify backend availability first:
 
 ```bash

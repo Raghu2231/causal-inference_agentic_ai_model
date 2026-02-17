@@ -25,3 +25,7 @@ def test_eda_limits_payload_for_large_inputs() -> None:
     result = run_eda(df, schema)
     assert len(result["volume_trends"]) <= 120
     assert len(result["eda_columns_used"]) <= 30
+    assert "variable_profiles" in result
+    assert "feature_engineering_view" in result
+    if result["volume_trends"]:
+        assert isinstance(result["volume_trends"][0]["week_end_date"], str)

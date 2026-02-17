@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.eda.analyzer import run_eda
 from backend.services.insight_generator import InsightGenerator
 from backend.services.lift_engine import LiftComputationEngine
-from backend.services.session_store import DATASETS
+from backend.services.session_store import DATASETS, EDA_CACHE
 from backend.utils.schema_detection import apply_schema_defaults, detect_schema, schema_to_dict
 from backend.utils.variable_partition import partition_variables
 from data_contracts.contracts import InsightRequest, RunRequest
@@ -48,6 +48,7 @@ async def upload_excel(file: UploadFile = File(...)) -> dict:
     prepared_df = apply_schema_defaults(df, schema)
     file_id = str(uuid4())
     DATASETS[file_id] = prepared_df
+    EDA_CACHE[file_id] = {}
     return {"file_id": file_id, "schema": schema_to_dict(schema), "rows": len(prepared_df)}
 
 
@@ -73,8 +74,12 @@ def preview(file_id: str) -> dict:
 def eda(file_id: str) -> dict:
     if file_id not in DATASETS:
         raise HTTPException(status_code=404, detail="file_id not found")
+    if file_id in EDA_CACHE and EDA_CACHE[file_id]:
+        return EDA_CACHE[file_id]
     schema = schema_to_dict(detect_schema(DATASETS[file_id]))
-    return run_eda(DATASETS[file_id], schema)
+    eda_payload = run_eda(DATASETS[file_id], schema)
+    EDA_CACHE[file_id] = eda_payload
+    return eda_payload
 
 
 @app.post("/run/{file_id}")
