@@ -111,12 +111,24 @@ uvicorn backend.api.main:app --reload --port 8000
 
 If `Activate.ps1` is missing, create the environment first with `python -m venv .venv`; the activation file is generated under `.venv\Scripts\Activate.ps1` (not in `backend/`).
 
+> **PowerShell note:** `source .venv/bin/activate` is a Bash command and will fail in PowerShell. Use `.\.venv\Scripts\Activate.ps1` instead.
+
 You can also run the helper script:
 
 ```powershell
 cd .\lift-impact-platform
 .\backend\start_backend.ps1
 ```
+
+
+
+### Shell activation quick reference
+
+- **PowerShell**: `.\.venv\Scripts\Activate.ps1`
+- **CMD**: `.\.venv\Scripts\activate.bat`
+- **Git Bash / WSL / Linux / macOS**: `source .venv/bin/activate`
+
+If `npm` is not recognized in PowerShell, install Node.js LTS and reopen terminal so PATH refreshes.
 
 ### 2) Frontend (React + Node.js)
 
@@ -134,6 +146,13 @@ npm run dev
 cd .\lift-impact-platform\frontend
 npm install
 npm run dev
+```
+
+Or run:
+
+```powershell
+cd .\lift-impact-platform
+.\frontend\start_frontend.ps1
 ```
 
 Optional frontend API override and timeout tuning:
