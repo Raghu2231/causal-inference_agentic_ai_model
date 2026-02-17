@@ -163,6 +163,8 @@ VITE_API_BASE_URL=http://localhost:8000
 VITE_API_TIMEOUT_MS=120000
 VITE_UPLOAD_TIMEOUT_MS=180000
 VITE_EDA_TIMEOUT_MS=300000
+VITE_API_RETRY_COUNT=3
+VITE_API_RETRY_DELAY_MS=1200
 ```
 
 The upload page includes backend health status, drag-and-drop upload, and a progress bar for large Excel files.
@@ -176,6 +178,8 @@ curl http://localhost:8000/health
 ```
 
 Expected response: `{"status":"ok"}`.
+
+If connection errors happen repeatedly after selecting a file, backend may be restarting/crashing while processing the file. Check the backend terminal for Python traceback and verify dependencies are installed in the same venv used by uvicorn.
 
 ## Deployment
 
