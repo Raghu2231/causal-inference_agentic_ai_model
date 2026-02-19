@@ -9,6 +9,14 @@ import pandas as pd
 from backend.utils.schema_detection import DetectedSchema
 
 
+def _coerce_numeric_columns(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+    out = df.copy()
+    for col in cols:
+        if col in out.columns:
+            out[col] = pd.to_numeric(out[col], errors="coerce").fillna(0.0)
+    return out
+
+
 @dataclass
 class TransformationOutput:
     data: pd.DataFrame
@@ -17,7 +25,9 @@ class TransformationOutput:
 
 def build_features(df: pd.DataFrame, schema: DetectedSchema) -> TransformationOutput:
     out = df.copy()
-    out[schema.time_col] = pd.to_datetime(out[schema.time_col])
+    out[schema.time_col] = pd.to_datetime(out[schema.time_col], errors="coerce")
+    out = out.dropna(subset=[schema.time_col])
+    out = _coerce_numeric_columns(out, schema.suggestion_cols + schema.action_cols + schema.outcome_cols)
     out = out.sort_values([schema.hcp_id_col, schema.rep_id_col, schema.time_col])
 
     out["suggestion_total"] = out[schema.suggestion_cols].sum(axis=1)

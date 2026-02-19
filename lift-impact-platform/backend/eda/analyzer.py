@@ -6,6 +6,14 @@ import numpy as np
 import pandas as pd
 
 
+def _coerce_numeric_columns(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
+    out = df.copy()
+    for col in cols:
+        if col in out.columns:
+            out[col] = pd.to_numeric(out[col], errors="coerce").fillna(0.0)
+    return out
+
+
 def _profile_numeric(series: pd.Series) -> Dict[str, float]:
     s = pd.to_numeric(series, errors="coerce").dropna()
     if s.empty:
@@ -42,6 +50,7 @@ def run_eda(df: pd.DataFrame, schema: Dict) -> Dict:
     tmp = df.copy()
     tmp[time_col] = pd.to_datetime(tmp[time_col], errors="coerce")
     tmp = tmp.dropna(subset=[time_col]).sort_values(time_col)
+    tmp = _coerce_numeric_columns(tmp, suggestions + actions + outcomes)
     tmp["suggestion_total"] = tmp[suggestions].sum(axis=1)
     tmp["action_total"] = tmp[actions].sum(axis=1)
 

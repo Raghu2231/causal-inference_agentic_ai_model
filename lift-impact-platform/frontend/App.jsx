@@ -172,6 +172,17 @@ export default function App() {
               <li>Final variable assignment should be reviewed by analytics owner before production decisions.</li>
             </ul>
           </div>
+          <div className="card nested">
+            <h3>Variable selection checklist (for your review)</h3>
+            <ul>
+              <li>✅ Time column is weekly/daily and parseable.</li>
+              <li>✅ HCP and Rep identifiers are stable (no mixed IDs).</li>
+              <li>✅ Suggestion/action/outcome columns are numeric or can be converted to numeric.</li>
+              <li>✅ Outcome columns (TRX/NBRX) represent the same aggregation grain as actions.</li>
+              <li>✅ Features needed for engineering are available: lag/rolling context (time-ordered records per HCP+Rep).</li>
+              <li>✅ Optional decay-style carryover inputs can use adstock diagnostics from EDA.</li>
+            </ul>
+          </div>
           <div className="grid">
             <KpiCard label="Rows" value={String(preview.shape?.rows ?? 0)} />
             <KpiCard label="Columns" value={String(preview.shape?.columns ?? 0)} />

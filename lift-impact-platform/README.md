@@ -173,6 +173,8 @@ For large datasets, EDA is loaded separately via **Load EDA Summary** after uplo
 
 EDA includes per-variable statistics (mean/std/quartiles) and a feature-engineering diagnostic view (lags/rolling/adstock summaries) for model-readiness checks.
 
+EDA and feature generation coerce suggestion/action/outcome columns to numeric (invalid values -> 0) to avoid mixed-type sum crashes.
+
 If the UI shows `Request timed out while connecting to http://localhost:8000`, verify backend availability first:
 
 ```bash
