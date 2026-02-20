@@ -83,3 +83,15 @@ def test_quantitative_correlation_insights() -> None:
         or (pair["left"] == "highly_related" and pair["right"] == "trx")
         for pair in result["high_correlation_pairs"]
     )
+
+
+def test_covariate_confound_and_variance_sparsity_outputs() -> None:
+    df = _sample_df()
+    df["covariate_age"] = [40 + i for i in range(20)]
+    df["confound_score"] = [0 if i % 2 == 0 else 1 for i in range(20)]
+    schema = schema_to_dict(detect_schema(df))
+    result = run_eda(df, schema, metric_group="Suggestions")
+
+    assert "covariate_age" in result["quantitative_covariate_confounders"]
+    assert "confound_score" in result["quantitative_covariate_confounders"]
+    assert any(row["variable"] == "covariate_age" for row in result["quantitative_diagnostics"])

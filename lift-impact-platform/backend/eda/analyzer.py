@@ -175,12 +175,27 @@ def run_eda(
     out["total_rows"] = int(len(tmp))
 
     covariates = [c for c in quantitative_variables if c not in set(suggestions + actions + outcomes)]
+    prefixed_covariate_confounders = [
+        c for c in covariates if c.lower().startswith("covariate") or c.lower().startswith("confound")
+    ]
     out["quantitative_variables"] = quantitative_variables
     out["categorical_variables"] = categorical_variables
     out["quantitative_covariates"] = covariates
+    out["quantitative_covariate_confounders"] = prefixed_covariate_confounders
     out["monthly_covariate_trends"] = {
         col: tmp.groupby("month", as_index=False)[col].mean().to_dict(orient="records") for col in covariates
     }
+
+    out["quantitative_diagnostics"] = [
+        {
+            "variable": col,
+            "variance": float(tmp[col].var(ddof=0)),
+            "sparsity_ratio": float((tmp[col] == 0).mean()),
+            "non_zero_ratio": float((tmp[col] != 0).mean()),
+        }
+        for col in quantitative_variables
+        if col in tmp.columns
+    ]
 
     quantitative_matrix_cols = [c for c in quantitative_variables if c in tmp.columns]
     if len(quantitative_matrix_cols) >= 2:

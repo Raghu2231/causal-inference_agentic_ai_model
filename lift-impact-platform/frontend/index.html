@@ -9,60 +9,31 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
-    :root {
-      --bg: #f3f6fc;
-      --card: #fff;
-      --ink: #101828;
-      --muted: #667085;
-      --brand: #1e3a8a;
-      --brand2: #1d4ed8;
-      --line: #e4e7ec;
-      --warn: #b54708;
-      --ok: #067647;
-      --shadow: 0 10px 30px rgba(16, 24, 40, .08);
-    }
+    :root { --bg:#f3f6fc; --card:#fff; --ink:#101828; --muted:#667085; --brand:#1e3a8a; --brand2:#1d4ed8; --line:#e4e7ec; --warn:#b54708; --ok:#067647; }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, Segoe UI, Arial, sans-serif; }
-    .shell { max-width: 1320px; margin: 24px auto; padding: 0 16px 24px; }
-    .hero {
-      background: linear-gradient(125deg, var(--brand), var(--brand2));
-      border-radius: 18px;
-      color: #fff;
-      padding: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 16px;
-    }
-    .hero h1 { margin: 0 0 6px; font-size: 30px; }
-    .hero p { margin: 0; color: #dbeafe; }
-    .tabs, .subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .tab, .subtab { border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; background: #fff; color: #344054; cursor: pointer; font-weight: 600; }
-    .tab.active, .subtab.active { background: #101828; color: #fff; border-color: #101828; }
-    .card { background: var(--card); border: 1px solid #eaecf0; border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(16,24,40,.05); }
-    .panel-title { margin: 0 0 10px; font-size: 20px; }
-    .section-title { margin: 0 0 10px; font-size: 17px; }
-    .muted { color: var(--muted); }
-    .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
-    .col-3 { grid-column: span 3; }
-    .col-4 { grid-column: span 4; }
-    .col-6 { grid-column: span 6; }
-    .col-8 { grid-column: span 8; }
-    .col-12 { grid-column: span 12; }
-    input, select, button, .toggle { width: 100%; border: 1px solid var(--line); border-radius: 10px; min-height: 40px; padding: 8px 10px; background: #fff; }
-    button.primary { background: #1d4ed8; border-color: #1d4ed8; color: #fff; font-weight: 700; }
-    button.secondary { background: #fff; color: #344054; }
-    .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
-    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
-    .metric { border: 1px solid #dbe4ff; border-radius: 12px; background: #f8faff; padding: 10px; }
-    .metric .k { color: #475467; font-size: 12px; }
-    .metric .v { font-size: 20px; font-weight: 800; margin-top: 4px; }
-    .status-pass { color: var(--ok); font-weight: 700; }
-    .status-warn { color: var(--warn); font-weight: 700; }
-    .danger { border: 1px solid #fecdca; color: #b42318; background: #fef3f2; }
-    .plot { min-height: 340px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border-bottom: 1px solid #f0f2f5; text-align: left; padding: 8px; font-size: 13px; }
-    th { color: #475467; }
-    .table-wrap { overflow-x: auto; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family: Inter, Segoe UI, Arial, sans-serif; }
+    .shell { max-width:1320px; margin:24px auto; padding:0 16px 24px; }
+    .hero { background:linear-gradient(125deg,var(--brand),var(--brand2)); border-radius:18px; color:#fff; padding:24px; margin-bottom:16px; }
+    .hero h1 { margin:0 0 6px; font-size:30px; } .hero p { margin:0; color:#dbeafe; }
+    .tabs,.subtabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+    .tab,.subtab { border:1px solid var(--line); border-radius:999px; padding:8px 14px; background:#fff; color:#344054; font-weight:600; cursor:pointer; }
+    .tab.active,.subtab.active { background:#101828; color:#fff; border-color:#101828; }
+    .card { background:var(--card); border:1px solid #eaecf0; border-radius:14px; padding:16px; margin-bottom:14px; box-shadow:0 4px 16px rgba(16,24,40,.05); }
+    .panel-title { margin:0 0 10px; font-size:20px; } .section-title { margin:0 0 10px; font-size:17px; }
+    .muted { color:var(--muted); } .danger { border:1px solid #fecdca; color:#b42318; background:#fef3f2; }
+    .grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:12px; }
+    .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}
+    input,select,button { width:100%; border:1px solid var(--line); border-radius:10px; min-height:40px; padding:8px 10px; background:#fff; }
+    button.primary { background:#1d4ed8; border-color:#1d4ed8; color:#fff; font-weight:700; }
+    button.secondary { background:#fff; color:#344054; }
+    .label { font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:600; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px; }
+    .metric { border:1px solid #dbe4ff; border-radius:12px; background:#f8faff; padding:10px; }
+    .metric .k { color:#475467; font-size:12px; } .metric .v { font-size:20px; font-weight:800; margin-top:4px; }
+    .status-pass{color:var(--ok);font-weight:700}.status-warn{color:var(--warn);font-weight:700}
+    .plot { min-height:340px; }
+    table { width:100%; border-collapse:collapse; } th,td { border-bottom:1px solid #f0f2f5; text-align:left; padding:8px; font-size:13px; }
+    th{color:#475467}.table-wrap{overflow-x:auto}
   </style>
 </head>
 <body>
@@ -73,35 +44,23 @@ const { useState, useEffect, useRef } = React;
 function DataTable({ rows }) {
   if (!rows || !rows.length) return <p className="muted">No data available.</p>;
   const columns = Object.keys(rows[0]);
-  return (
-    <div className="table-wrap">
-      <table>
-        <thead><tr>{columns.map((c) => <th key={c}>{c}</th>)}</tr></thead>
-        <tbody>{rows.map((row, i) => <tr key={i}>{columns.map((c) => <td key={c}>{String(row[c])}</td>)}</tr>)}</tbody>
-      </table>
-    </div>
-  );
+  return <div className="table-wrap"><table><thead><tr>{columns.map((c) => <th key={c}>{c}</th>)}</tr></thead><tbody>{rows.map((row, i) => <tr key={i}>{columns.map((c) => <td key={c}>{String(row[c])}</td>)}</tr>)}</tbody></table></div>;
 }
 
-function Plot({ data, layout }) {
+function Plot({ data, layout, minHeight=340 }) {
   const ref = useRef(null);
   useEffect(() => {
     if (!window.Plotly || !ref.current || !data || !data.length) return;
-    window.Plotly.react(
-      ref.current,
-      data,
-      { paper_bgcolor: '#fff', plot_bgcolor: '#fff', margin: { l: 52, r: 25, t: 44, b: 48 }, ...layout },
-      { responsive: true, displayModeBar: false }
-    );
+    window.Plotly.react(ref.current, data, { paper_bgcolor:'#fff', plot_bgcolor:'#fff', margin:{l:52,r:30,t:44,b:52}, ...layout }, { responsive:true, displayModeBar:false });
   }, [data, layout]);
-  return <div className="plot" ref={ref} />;
+  return <div className="plot" style={{ minHeight }} ref={ref} />;
 }
 
 function stackedFromMonthlyRows(rows) {
   if (!rows || !rows.length) return null;
   const months = rows.map((r) => r.month);
   const cols = Object.keys(rows[0]).filter((k) => k !== 'month');
-  return cols.map((col) => ({ type: 'bar', name: col, x: months, y: rows.map((r) => r[col]) }));
+  return cols.map((col) => ({ type:'bar', name:col, x:months, y:rows.map((r) => r[col]) }));
 }
 
 function App() {
@@ -111,80 +70,49 @@ function App() {
   const [fileId, setFileId] = useState('');
   const [schema, setSchema] = useState(null);
   const [checklist, setChecklist] = useState([]);
-  const [metricGroup, setMetricGroup] = useState('Suggestions');
-  const [metricGroups, setMetricGroups] = useState({ Suggestions: [], Actions: [], Outcomes: [], 'Other Variables': [] });
-  const [variable, setVariable] = useState('');
-  const [includeZ, setIncludeZ] = useState(false);
   const [eda, setEda] = useState(null);
-  const [covariate, setCovariate] = useState('');
-  const [categoricalVar, setCategoricalVar] = useState('');
   const [summary, setSummary] = useState(null);
+  const [covariateConfound, setCovariateConfound] = useState('');
+  const [qualitativeVar, setQualitativeVar] = useState('');
   const [multiplier, setMultiplier] = useState(1.0);
   const [channel, setChannel] = useState('');
   const [loadingEda, setLoadingEda] = useState(false);
   const [error, setError] = useState('');
-
-  const loadGroupMetadata = async (groupName) => {
-    if (!fileId) return;
-    const res = await fetch(`/eda/${fileId}?metric_group=${encodeURIComponent(groupName)}`);
-    const payload = await res.json();
-    if (!res.ok) return setError(payload.detail || 'Unable to load EDA metadata');
-    const groups = payload.metric_groups || {};
-    setMetricGroups(groups);
-    const options = groups[groupName] || [];
-    setVariable(options[0] || '');
-  };
-
-  useEffect(() => {
-    if (fileId) loadGroupMetadata(metricGroup);
-  }, [fileId, metricGroup]);
 
   const upload = async () => {
     setError('');
     if (!file) return;
     const form = new FormData();
     form.append('file', file);
-    const res = await fetch('/upload', { method: 'POST', body: form });
+    const res = await fetch('/upload', { method:'POST', body:form });
     const payload = await res.json();
     if (!res.ok) return setError(payload.detail || 'Upload failed');
-    setFileId(payload.file_id);
-    setSchema(payload.schema);
-    setEda(null);
-    setSummary(null);
-    setActive('Schema & Variables');
+    setFileId(payload.file_id); setSchema(payload.schema); setEda(null); setSummary(null); setActive('Schema & Variables');
   };
 
   const loadChecklist = async () => {
     if (!fileId) return;
-    const res = await fetch(`/checklist/${fileId}`);
-    const payload = await res.json();
+    const res = await fetch(`/checklist/${fileId}`); const payload = await res.json();
     if (!res.ok) return setError(payload.detail || 'Checklist failed');
     setChecklist(payload.items || []);
   };
 
   const loadEda = async () => {
     if (!fileId) return;
-    setLoadingEda(true);
-    setError('');
-    const params = new URLSearchParams({ metric_group: metricGroup, include_zscore: includeZ ? 'true' : 'false' });
-    if (variable) params.set('variable', variable);
-    const res = await fetch(`/eda/${fileId}?${params.toString()}`);
+    setLoadingEda(true); setError('');
+    const res = await fetch(`/eda/${fileId}?metric_group=Suggestions`);
     const payload = await res.json();
     setLoadingEda(false);
     if (!res.ok) return setError(payload.detail || 'EDA failed');
     setEda(payload);
-    setCovariate(payload.quantitative_covariates?.[0] || '');
-    setCategoricalVar(payload.categorical_variables?.[0] || '');
+    setCovariateConfound(payload.quantitative_covariate_confounders?.[0] || '');
+    setQualitativeVar(payload.categorical_variables?.[0] || '');
   };
 
   const runModel = async () => {
     if (!fileId) return;
     setError('');
-    const res = await fetch(`/run/${fileId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ scenario_multiplier: Number(multiplier || 1), isolate_channel: channel || null }),
-    });
+    const res = await fetch(`/run/${fileId}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ scenario_multiplier:Number(multiplier || 1), isolate_channel:channel || null }) });
     const payload = await res.json();
     if (!res.ok) return setError(payload.detail || 'Modeling failed');
     setSummary(payload.summary);
@@ -192,172 +120,55 @@ function App() {
 
   const actionChart = stackedFromMonthlyRows(eda?.monthly_counts_by_type?.actions || []);
   const suggestionChart = stackedFromMonthlyRows(eda?.monthly_counts_by_type?.suggestions || []);
-  const outcomeChart = stackedFromMonthlyRows(eda?.monthly_counts_by_type?.outcomes || []);
+  const outcomeRows = eda?.monthly_counts_by_type?.outcomes || [];
+  const trxChart = outcomeRows.length && outcomeRows[0].trx !== undefined ? [{ type:'bar', name:'trx', x:outcomeRows.map((r)=>r.month), y:outcomeRows.map((r)=>r.trx), marker:{color:'#0ea5a4'} }] : null;
+  const nbrxChart = outcomeRows.length && outcomeRows[0].nbrx !== undefined ? [{ type:'bar', name:'nbrx', x:outcomeRows.map((r)=>r.month), y:outcomeRows.map((r)=>r.nbrx), marker:{color:'#7c3aed'} }] : null;
 
-  const covariateTrend = (() => {
-    const rows = eda?.monthly_covariate_trends?.[covariate] || [];
-    if (!rows.length || !covariate) return null;
-    return [{ type: 'bar', x: rows.map((r) => r.month), y: rows.map((r) => r[covariate]), name: covariate, marker: { color: '#2563eb' } }];
+  const covariateConfoundTrend = (() => {
+    const rows = eda?.monthly_covariate_trends?.[covariateConfound] || [];
+    if (!rows.length || !covariateConfound) return null;
+    return [{ type:'scatter', mode:'lines+markers', x:rows.map((r)=>r.month), y:rows.map((r)=>r[covariateConfound]), name:covariateConfound, line:{color:'#2563eb', width:3} }];
   })();
 
-  const selectedTrend = (() => {
-    const rows = eda?.monthly_variable_trend || [];
-    if (!rows.length || !eda?.selected_variable) return null;
-    const outlierRows = rows.filter((r) => r.is_outlier);
-    return [
-      { type: 'bar', x: rows.map((r) => r.month), y: rows.map((r) => r[eda.selected_variable]), name: eda.selected_variable, marker: { color: '#0ea5a4' } },
-      { type: 'scatter', mode: 'markers', x: outlierRows.map((r) => r.month), y: outlierRows.map((r) => r[eda.selected_variable]), name: 'Outlier', marker: { size: 11, color: '#ef4444', symbol: 'diamond' } },
-    ];
-  })();
+  const qualitativeRows = eda?.categorical_unique_counts?.[qualitativeVar] || [];
+  const qualitativeChart = qualitativeRows.length ? [{ type:'bar', x:qualitativeRows.map((r)=>r.category), y:qualitativeRows.map((r)=>r.unique_id_count), marker:{color:'#ea580c'} }] : null;
 
-  const correlationMatrix = eda?.quantitative_correlation_matrix || {};
-  const correlationVars = Object.keys(correlationMatrix);
-  const correlationHeatmap = correlationVars.length ? [{
-    type: 'heatmap',
-    x: correlationVars,
-    y: correlationVars,
-    z: correlationVars.map((r) => correlationVars.map((c) => correlationMatrix[r][c])),
-    zmin: -1,
-    zmax: 1,
-    colorscale: 'RdBu',
-    hovertemplate: '%{y} vs %{x}<br>r=%{z:.3f}<extra></extra>',
-  }] : null;
+  const corr = eda?.quantitative_correlation_matrix || {};
+  const corrVars = Object.keys(corr);
+  const corrHeatmap = corrVars.length ? [{ type:'heatmap', x:corrVars, y:corrVars, z:corrVars.map((r)=>corrVars.map((c)=>corr[r][c])), zmin:-1, zmax:1, colorscale:'RdBu', hovertemplate:'%{y} vs %{x}<br>r=%{z:.3f}<extra></extra>' }] : null;
 
-  const categoricalRows = eda?.categorical_unique_counts?.[categoricalVar] || [];
-  const categoricalChart = categoricalRows.length
-    ? [{ type: 'bar', x: categoricalRows.map((r) => r.category), y: categoricalRows.map((r) => r.unique_id_count), marker: { color: '#7c3aed' } }]
-    : null;
+  return <div className="shell">
+    <div className="hero"><h1>Pharma Causality Lab</h1><p>Enterprise-grade causal intelligence workspace for Suggestions → Actions → Outcomes.</p></div>
 
-  return (
-    <div className="shell">
-      <div className="hero">
-        <h1>Pharma Causality Lab</h1>
-        <p>Enterprise-grade causal intelligence workspace for Suggestions → Actions → Outcomes.</p>
-      </div>
+    <div className="tabs">{['Upload','Schema & Variables','EDA','Modeling'].map((tab)=><button key={tab} className={`tab ${active===tab?'active':''}`} onClick={()=>setActive(tab)}>{tab}</button>)}</div>
+    {error && <div className="card danger">{error}</div>}
 
-      <div className="tabs">
-        {['Upload', 'Schema & Variables', 'EDA', 'Modeling'].map((tab) => (
-          <button key={tab} className={`tab ${active === tab ? 'active' : ''}`} onClick={() => setActive(tab)}>{tab}</button>
-        ))}
-      </div>
+    {active==='Upload' && <div className="card"><h3 className="panel-title">Data Upload</h3><div className="grid"><div className="col-8"><input type="file" accept=".xlsx,.xls" onChange={(e)=>setFile(e.target.files[0])}/></div><div className="col-4"><button className="primary" onClick={upload}>Upload & Detect Schema</button></div></div>{fileId && <p className="muted">Loaded file id: <b>{fileId}</b></p>}</div>}
 
-      {error && <div className="card danger">{error}</div>}
+    {active==='Schema & Variables' && <><div className="card"><h3 className="panel-title">Variable Checklist</h3><button className="secondary" style={{maxWidth:220}} onClick={loadChecklist}>Refresh checklist</button><div style={{marginTop:8}}>{checklist.map((item,idx)=><p key={idx}><span className={item.status==='pass'?'status-pass':'status-warn'}>{item.status.toUpperCase()}</span> — {item.label}: {item.detail}</p>)}</div></div><div className="card"><h3 className="panel-title">Detected Schema</h3><pre>{JSON.stringify(schema,null,2)}</pre></div></>}
 
-      {active === 'Upload' && (
-        <div className="card">
-          <h3 className="panel-title">Data Upload</h3>
-          <div className="grid">
-            <div className="col-8"><input type="file" accept=".xlsx,.xls" onChange={(e) => setFile(e.target.files[0])} /></div>
-            <div className="col-4"><button className="primary" onClick={upload}>Upload & Detect Schema</button></div>
-          </div>
-          {fileId && <p className="muted">Loaded file id: <b>{fileId}</b></p>}
-        </div>
-      )}
+    {active==='EDA' && <>
+      <div className="card"><h3 className="panel-title">Deep EDA</h3><p className="muted">EDA & Control tab removed. Use the summary tabs below.</p><button className="primary" style={{maxWidth:220}} onClick={loadEda}>{loadingEda?'Loading…':'Load EDA Summary'}</button></div>
 
-      {active === 'Schema & Variables' && (
-        <>
-          <div className="card">
-            <h3 className="panel-title">Variable Checklist</h3>
-            <button className="secondary" style={{ maxWidth: 220 }} onClick={loadChecklist}>Refresh checklist</button>
-            <div style={{ marginTop: 8 }}>
-              {checklist.map((item, idx) => (
-                <p key={idx}><span className={item.status === 'pass' ? 'status-pass' : 'status-warn'}>{item.status.toUpperCase()}</span> — {item.label}: {item.detail}</p>
-              ))}
-            </div>
-          </div>
-          <div className="card">
-            <h3 className="panel-title">Detected Schema</h3>
-            <pre>{JSON.stringify(schema, null, 2)}</pre>
-          </div>
-        </>
-      )}
+      {eda && <>
+        <div className="subtabs">{['Quantitative','Qualitative','Correlation'].map((tab)=><button key={tab} className={`subtab ${edaTab===tab?'active':''}`} onClick={()=>setEdaTab(tab)}>{tab} Summary</button>)}</div>
 
-      {active === 'EDA' && (
-        <>
-          <div className="card">
-            <h3 className="panel-title">EDA & QC Controls</h3>
-            <div className="grid">
-              <div className="col-3"><div className="label">Metric Group</div><select value={metricGroup} onChange={(e) => setMetricGroup(e.target.value)}><option>Suggestions</option><option>Actions</option><option>Outcomes</option><option>Other Variables</option></select></div>
-              <div className="col-3"><div className="label">Variable</div><select value={variable} onChange={(e) => setVariable(e.target.value)}>{(metricGroups[metricGroup] || []).map((v) => <option key={v} value={v}>{v}</option>)}</select></div>
-              <div className="col-3"><div className="label">Outliers</div><label className="toggle"><input type="checkbox" checked={includeZ} onChange={(e) => setIncludeZ(e.target.checked)} /> Include z-score</label></div>
-              <div className="col-3"><div className="label">&nbsp;</div><button className="primary" onClick={loadEda}>{loadingEda ? 'Loading…' : 'Run Deep EDA'}</button></div>
-            </div>
-          </div>
+        {edaTab==='Quantitative' && <>
+          <div className="card"><h4 className="section-title">Action Type by Action Count (year_month)</h4>{actionChart ? <Plot data={actionChart} layout={{barmode:'stack',xaxis:{title:'year_month'},yaxis:{title:'action_count'}}}/> : <p className="muted">No action columns found.</p>}</div>
+          <div className="card"><h4 className="section-title">Suggestion Type by Suggestion Count (year_month)</h4>{suggestionChart ? <Plot data={suggestionChart} layout={{barmode:'stack',xaxis:{title:'year_month'},yaxis:{title:'suggestion_count'}}}/> : <p className="muted">No suggestion columns found.</p>}</div>
+          <div className="card"><h4 className="section-title">Outcome Type = trx (Outcome Count by year_month)</h4>{trxChart ? <Plot data={trxChart} layout={{xaxis:{title:'year_month'},yaxis:{title:'outcome_count'}}}/> : <p className="muted">trx column not found.</p>}</div>
+          <div className="card"><h4 className="section-title">Outcome Type = nbrx (Outcome Count by year_month)</h4>{nbrxChart ? <Plot data={nbrxChart} layout={{xaxis:{title:'year_month'},yaxis:{title:'outcome_count'}}}/> : <p className="muted">nbrx column not found.</p>}</div>
+          <div className="card"><h4 className="section-title">Covariate/Confound Trend (Quantitative only)</h4><div className="grid"><div className="col-6"><select value={covariateConfound} onChange={(e)=>setCovariateConfound(e.target.value)}>{(eda.quantitative_covariate_confounders || []).map((c)=><option key={c} value={c}>{c}</option>)}</select></div></div>{covariateConfoundTrend ? <Plot data={covariateConfoundTrend} layout={{xaxis:{title:'year_month'},yaxis:{title:covariateConfound}}}/> : <p className="muted">No quantitative columns starting with covariate/confound found.</p>}<div className="metrics"><div className="metric"><div className="k">Rows</div><div className="v">{eda.total_rows || 0}</div></div><div className="metric"><div className="k">Quantitative Vars</div><div className="v">{(eda.quantitative_variables || []).length}</div></div><div className="metric"><div className="k">Qualitative Vars</div><div className="v">{(eda.categorical_variables || []).length}</div></div><div className="metric"><div className="k">Action Uptake</div><div className="v">{((eda.action_uptake_rate || 0)*100).toFixed(1)}%</div></div></div></div>
+        </>}
 
-          {eda && (
-            <>
-              <div className="subtabs">
-                {['Quantitative', 'Categorical', 'Correlation'].map((tab) => (
-                  <button key={tab} className={`subtab ${edaTab === tab ? 'active' : ''}`} onClick={() => setEdaTab(tab)}>{tab} Summary</button>
-                ))}
-              </div>
+        {edaTab==='Qualitative' && <><div className="card"><h4 className="section-title">Qualitative Variables — Unique {eda.categorical_id_column || 'ID'} Count by Category</h4><div className="grid"><div className="col-6"><select value={qualitativeVar} onChange={(e)=>setQualitativeVar(e.target.value)}>{(eda.categorical_variables || []).map((v)=><option key={v} value={v}>{v}</option>)}</select></div></div>{qualitativeChart ? <Plot data={qualitativeChart} layout={{xaxis:{title:'category'},yaxis:{title:`unique_${eda.categorical_id_column || 'id'}_count`}}}/> : <p className="muted">No qualitative distribution available.</p>}</div><div className="card"><DataTable rows={qualitativeRows} /></div></>}
 
-              {edaTab === 'Quantitative' && (
-                <>
-                  <div className="card"><h4 className="section-title">Action Count by Action Type (year_month)</h4>{actionChart ? <Plot data={actionChart} layout={{ barmode: 'stack', xaxis: { title: 'year_month' }, yaxis: { title: 'Action Count' } }} /> : <p className="muted">No action columns found.</p>}</div>
-                  <div className="card"><h4 className="section-title">Suggestion Count by Suggestion Type (year_month)</h4>{suggestionChart ? <Plot data={suggestionChart} layout={{ barmode: 'stack', xaxis: { title: 'year_month' }, yaxis: { title: 'Suggestion Count' } }} /> : <p className="muted">No suggestion columns found.</p>}</div>
-                  <div className="card"><h4 className="section-title">Outcome Count by Outcome Type (year_month)</h4>{outcomeChart ? <Plot data={outcomeChart} layout={{ barmode: 'stack', xaxis: { title: 'year_month' }, yaxis: { title: 'Outcome Count' } }} /> : <p className="muted">No outcome columns found.</p>}</div>
-                  <div className="card">
-                    <h4 className="section-title">Quantitative Covariates Monthly Trend</h4>
-                    <div className="grid"><div className="col-6"><select value={covariate} onChange={(e) => setCovariate(e.target.value)}>{(eda.quantitative_covariates || []).map((v) => <option key={v} value={v}>{v}</option>)}</select></div></div>
-                    {covariateTrend ? <Plot data={covariateTrend} layout={{ xaxis: { title: 'year_month' }, yaxis: { title: 'Average value' } }} /> : <p className="muted">No quantitative covariates available.</p>}
-                  </div>
-                  <div className="card">
-                    <h4 className="section-title">Selected Variable Trend + Outliers</h4>
-                    {selectedTrend ? <Plot data={selectedTrend} layout={{ barmode: 'overlay', xaxis: { title: 'year_month' }, yaxis: { title: 'Value' } }} /> : <p className="muted">No trend data available.</p>}
-                    <div className="metrics">
-                      <div className="metric"><div className="k">Mean</div><div className="v">{(eda.variable_profile?.mean || 0).toFixed(2)}</div></div>
-                      <div className="metric"><div className="k">Std Dev</div><div className="v">{(eda.variable_profile?.std_dev || 0).toFixed(2)}</div></div>
-                      <div className="metric"><div className="k">IQR Outliers</div><div className="v">{eda.outliers?.iqr?.count || 0}</div></div>
-                      <div className="metric"><div className="k">Rows</div><div className="v">{eda.total_rows || 0}</div></div>
-                    </div>
-                  </div>
-                </>
-              )}
+        {edaTab==='Correlation' && <><div className="card"><h4 className="section-title">Correlation Matrix — Quantitative Variables</h4>{corrHeatmap ? <Plot data={corrHeatmap} minHeight={620} layout={{xaxis:{automargin:true},yaxis:{automargin:true}}}/> : <p className="muted">Need at least two quantitative variables.</p>}</div><div className="card"><h4 className="section-title">Highly Correlated Insights (|r| ≥ 0.70)</h4><DataTable rows={(eda.high_correlation_pairs || []).map((r)=>({variable_1:r.left,variable_2:r.right,correlation:r.correlation,strength:r.strength,insight:r.insight}))}/></div><div className="card"><h4 className="section-title">Variance & Sparsity (Quantitative Variables)</h4><DataTable rows={eda.quantitative_diagnostics || []} /></div></>}
+      </>}
+    </>}
 
-              {edaTab === 'Categorical' && (
-                <>
-                  <div className="card">
-                    <h4 className="section-title">Unique {eda.categorical_id_column || 'ID'} Count by Category</h4>
-                    <p className="muted">Choose a categorical variable to inspect customer/HCP spread.</p>
-                    <div className="grid"><div className="col-6"><select value={categoricalVar} onChange={(e) => setCategoricalVar(e.target.value)}>{(eda.categorical_variables || []).map((v) => <option key={v} value={v}>{v}</option>)}</select></div></div>
-                    {categoricalChart ? <Plot data={categoricalChart} layout={{ xaxis: { title: 'Category' }, yaxis: { title: `Unique ${eda.categorical_id_column || 'ID'} count` } }} /> : <p className="muted">No categorical distribution available.</p>}
-                  </div>
-                  <div className="card"><DataTable rows={categoricalRows} /></div>
-                </>
-              )}
-
-              {edaTab === 'Correlation' && (
-                <>
-                  <div className="card"><h4 className="section-title">Correlation Matrix — Quantitative Variables Only</h4>{correlationHeatmap ? <Plot data={correlationHeatmap} layout={{ xaxis: { automargin: true }, yaxis: { automargin: true } }} /> : <p className="muted">Need at least two quantitative variables.</p>}</div>
-                  <div className="card"><h4 className="section-title">Insights: Highly Correlated Variables (|r| ≥ 0.70)</h4><DataTable rows={(eda.high_correlation_pairs || []).map((r) => ({ variable_1: r.left, variable_2: r.right, correlation: r.correlation, strength: r.strength, insight: r.insight }))} /></div>
-                </>
-              )}
-            </>
-          )}
-        </>
-      )}
-
-      {active === 'Modeling' && (
-        <div className="card">
-          <h3 className="panel-title">Path A + Path B Modeling</h3>
-          <div className="grid">
-            <div className="col-4"><div className="label">Scenario Multiplier</div><input type="number" step="0.1" value={multiplier} onChange={(e) => setMultiplier(e.target.value)} /></div>
-            <div className="col-4"><div className="label">Isolate Channel</div><input value={channel} onChange={(e) => setChannel(e.target.value)} placeholder="Optional" /></div>
-            <div className="col-4"><div className="label">&nbsp;</div><button className="primary" onClick={runModel}>Run Modeling</button></div>
-          </div>
-          {summary && (
-            <>
-              <h4 className="section-title">Path A Diagnostics</h4><pre>{JSON.stringify(summary.path_a?.diagnostics || {}, null, 2)}</pre>
-              <DataTable rows={summary.path_a?.monthly_rollup || []} />
-              <h4 className="section-title">Path B Diagnostics</h4><pre>{JSON.stringify(summary.path_b?.diagnostics || {}, null, 2)}</pre>
-              <DataTable rows={summary.path_b?.monthly_rollup || []} />
-            </>
-          )}
-        </div>
-      )}
-    </div>
-  );
+    {active==='Modeling' && <div className="card"><h3 className="panel-title">Path A + Path B Modeling</h3><div className="grid"><div className="col-4"><div className="label">Scenario Multiplier</div><input type="number" step="0.1" value={multiplier} onChange={(e)=>setMultiplier(e.target.value)} /></div><div className="col-4"><div className="label">Isolate Channel</div><input value={channel} onChange={(e)=>setChannel(e.target.value)} placeholder="Optional"/></div><div className="col-4"><div className="label">&nbsp;</div><button className="primary" onClick={runModel}>Run Modeling</button></div></div>{summary && <><h4 className="section-title">Path A Diagnostics</h4><pre>{JSON.stringify(summary.path_a?.diagnostics || {}, null, 2)}</pre><DataTable rows={summary.path_a?.monthly_rollup || []}/><h4 className="section-title">Path B Diagnostics</h4><pre>{JSON.stringify(summary.path_b?.diagnostics || {}, null, 2)}</pre><DataTable rows={summary.path_b?.monthly_rollup || []}/></>}</div>}
+  </div>;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
