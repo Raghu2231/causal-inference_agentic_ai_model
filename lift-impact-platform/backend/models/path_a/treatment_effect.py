@@ -34,11 +34,16 @@ class PathATreatmentEffectModel:
         X = df[feature_cols]
         treated = df[treatment_col] == 1
 
-        self.model_treated.fit(X[treated], df.loc[treated, action_value_col])
-        self.model_control.fit(X[~treated], df.loc[~treated, action_value_col])
-
-        y1 = self.model_treated.predict(X)
-        y0 = self.model_control.predict(X)
+        if treated.sum() == 0 or (~treated).sum() == 0:
+            base_treated = float(df.loc[treated, action_value_col].mean()) if treated.sum() else 0.0
+            base_control = float(df.loc[~treated, action_value_col].mean()) if (~treated).sum() else 0.0
+            y1 = pd.Series([base_treated] * len(df), index=df.index)
+            y0 = pd.Series([base_control] * len(df), index=df.index)
+        else:
+            self.model_treated.fit(X[treated], df.loc[treated, action_value_col])
+            self.model_control.fit(X[~treated], df.loc[~treated, action_value_col])
+            y1 = pd.Series(self.model_treated.predict(X), index=df.index)
+            y0 = pd.Series(self.model_control.predict(X), index=df.index)
         ite = pd.Series(y1 - y0, index=df.index).clip(lower=0)
 
         channel_lift = {}
