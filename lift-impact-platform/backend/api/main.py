@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from io import BytesIO
+from pathlib import Path
 from uuid import uuid4
 
 import pandas as pd
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from fastapi.responses import HTMLResponse
 
 from backend.eda.analyzer import run_eda
 from backend.services.lift_engine import LiftComputationEngine
@@ -15,6 +17,11 @@ from data_contracts.contracts import RunRequest
 
 app = FastAPI(title="Pharma Causality Lab API")
 engine = LiftComputationEngine()
+
+
+@app.get("/", response_class=HTMLResponse)
+def root() -> str:
+    return (Path(__file__).resolve().parents[2] / "frontend" / "index.html").read_text(encoding="utf-8")
 
 
 @app.get("/health")

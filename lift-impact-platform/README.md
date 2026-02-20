@@ -76,21 +76,23 @@ pip install -r requirements.txt
 # API
 uvicorn backend.api.main:app --reload --port 8000
 
-# Frontend
-streamlit run frontend/app.py
+# Frontend (React app served by FastAPI root)
+# open http://localhost:8000 after starting API
 ```
 
 ## Deployment
 
-- Containerize backend and frontend separately.
+- Containerize backend service; it serves the React UI and API together.
 - Backend can run in Kubernetes or serverless containers.
-- Frontend Streamlit can run behind reverse proxy or on Streamlit Community Cloud.
+- Frontend uses React via CDN and Babel in-browser to avoid Node.js in runtime/build pipeline.
 - Persist artifacts (`artifacts/`) to object storage (S3/GCS/Azure Blob) for multi-instance stateless operation.
 
-## API overview
+## Web + API overview
 
+- `GET /` — Pharma Causality Lab React web app
 - `POST /upload` — upload Excel, schema detection
-- `GET /eda/{file_id}` — generated EDA package
+- `GET /checklist/{file_id}` — pre-modeling checklist (pass/warn)
+- `GET /eda/{file_id}` — generated month-level EDA package
 - `POST /run/{file_id}` — execute Path A + Path B and return summary
 
 ## Notes on implementation quality
