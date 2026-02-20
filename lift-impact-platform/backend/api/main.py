@@ -1,19 +1,27 @@
 from __future__ import annotations
 
 from io import BytesIO
+from pathlib import Path
 from uuid import uuid4
 
 import pandas as pd
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from fastapi.responses import HTMLResponse
 
 from backend.eda.analyzer import run_eda
 from backend.services.lift_engine import LiftComputationEngine
-from backend.services.session_store import DATASETS
+from backend.services.session_store import DATASETS, EDA_CACHE
+from backend.utils.checklist import build_variable_checklist
 from backend.utils.schema_detection import detect_schema, schema_to_dict
 from data_contracts.contracts import RunRequest
 
-app = FastAPI(title="Lift Impact Platform API")
+app = FastAPI(title="Pharma Causality Lab API")
 engine = LiftComputationEngine()
+
+
+@app.get("/", response_class=HTMLResponse)
+def root() -> str:
+    return (Path(__file__).resolve().parents[2] / "frontend" / "index.html").read_text(encoding="utf-8")
 
 
 @app.get("/health")
@@ -32,15 +40,35 @@ async def upload_excel(file: UploadFile = File(...)) -> dict:
     schema = detect_schema(df)
     file_id = str(uuid4())
     DATASETS[file_id] = df
+    EDA_CACHE.pop(file_id, None)
     return {"file_id": file_id, "schema": schema_to_dict(schema), "rows": len(df)}
 
 
-@app.get("/eda/{file_id}")
-def eda(file_id: str) -> dict:
+@app.get("/checklist/{file_id}")
+def checklist(file_id: str) -> dict:
     if file_id not in DATASETS:
         raise HTTPException(status_code=404, detail="file_id not found")
     schema = schema_to_dict(detect_schema(DATASETS[file_id]))
-    return run_eda(DATASETS[file_id], schema)
+    return {"items": build_variable_checklist(DATASETS[file_id], schema)}
+
+
+@app.get("/eda/{file_id}")
+def eda(
+    file_id: str,
+    metric_group: str = Query(default="Suggestions"),
+    variable: str | None = Query(default=None),
+    include_zscore: bool = Query(default=False),
+) -> dict:
+    if file_id not in DATASETS:
+        raise HTTPException(status_code=404, detail="file_id not found")
+    cache_key = f"{file_id}:{metric_group}:{variable}:{include_zscore}"
+    if cache_key in EDA_CACHE:
+        return EDA_CACHE[cache_key]
+
+    schema = schema_to_dict(detect_schema(DATASETS[file_id]))
+    result = run_eda(DATASETS[file_id], schema, metric_group=metric_group, variable=variable, include_zscore=include_zscore)
+    EDA_CACHE[cache_key] = result
+    return result
 
 
 @app.post("/run/{file_id}")
