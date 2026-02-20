@@ -35,13 +35,21 @@ class PathBOutcomeLiftModel:
         X = df[feature_cols]
         treated = df[treatment_col] == 1
 
-        self.trx_treated.fit(X[treated], df.loc[treated, trx_col])
-        self.trx_control.fit(X[~treated], df.loc[~treated, trx_col])
-        self.nbrx_treated.fit(X[treated], df.loc[treated, nbrx_col])
-        self.nbrx_control.fit(X[~treated], df.loc[~treated, nbrx_col])
+        if treated.sum() == 0 or (~treated).sum() == 0:
+            trx_t = float(df.loc[treated, trx_col].mean()) if treated.sum() else 0.0
+            trx_c = float(df.loc[~treated, trx_col].mean()) if (~treated).sum() else 0.0
+            nbrx_t = float(df.loc[treated, nbrx_col].mean()) if treated.sum() else 0.0
+            nbrx_c = float(df.loc[~treated, nbrx_col].mean()) if (~treated).sum() else 0.0
+            inc_trx = pd.Series([max(trx_t - trx_c, 0.0)] * len(df), index=df.index)
+            inc_nbrx = pd.Series([max(nbrx_t - nbrx_c, 0.0)] * len(df), index=df.index)
+        else:
+            self.trx_treated.fit(X[treated], df.loc[treated, trx_col])
+            self.trx_control.fit(X[~treated], df.loc[~treated, trx_col])
+            self.nbrx_treated.fit(X[treated], df.loc[treated, nbrx_col])
+            self.nbrx_control.fit(X[~treated], df.loc[~treated, nbrx_col])
 
-        inc_trx = pd.Series(self.trx_treated.predict(X) - self.trx_control.predict(X), index=df.index).clip(lower=0)
-        inc_nbrx = pd.Series(self.nbrx_treated.predict(X) - self.nbrx_control.predict(X), index=df.index).clip(lower=0)
+            inc_trx = pd.Series(self.trx_treated.predict(X) - self.trx_control.predict(X), index=df.index).clip(lower=0)
+            inc_nbrx = pd.Series(self.nbrx_treated.predict(X) - self.nbrx_control.predict(X), index=df.index).clip(lower=0)
 
         return PathBOutcomeLiftResult(
             incremental_trx=inc_trx,
