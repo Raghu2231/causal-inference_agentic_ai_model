@@ -5,7 +5,7 @@ openpyxl
 scikit-learn
 joblib
 plotly
-streamlit
 requests
 pyarrow
 pytest
+python-multipart
