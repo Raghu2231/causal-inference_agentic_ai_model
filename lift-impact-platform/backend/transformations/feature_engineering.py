@@ -20,6 +20,10 @@ def build_features(df: pd.DataFrame, schema: DetectedSchema) -> TransformationOu
     out[schema.time_col] = pd.to_datetime(out[schema.time_col])
     out = out.sort_values([schema.hcp_id_col, schema.rep_id_col, schema.time_col])
 
+    metric_cols = schema.suggestion_cols + schema.action_cols + schema.outcome_cols
+    for col in metric_cols:
+        out[col] = pd.to_numeric(out[col], errors="coerce").fillna(0.0)
+
     out["suggestion_total"] = out[schema.suggestion_cols].sum(axis=1)
     out["action_total"] = out[schema.action_cols].sum(axis=1)
 
