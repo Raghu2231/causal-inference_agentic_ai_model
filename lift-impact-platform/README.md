@@ -1,4 +1,4 @@
-# Lift Impact Platform
+# Pharma Causal Lift Model
 
 A production-style causal lift platform that re-implements the source repository's core ideas: a two-path causal chain from **Suggestions → Actions → Outcomes (TRX/NBRX)**.
 
@@ -76,7 +76,12 @@ pip install -r requirements.txt
 # API
 uvicorn backend.api.main:app --reload --port 8000
 
-# Frontend (React app served by FastAPI root)
+# Frontend (React + Vite, Node.js)
+cd frontend
+npm install
+npm run build
+cd ..
+
 # open http://localhost:8000 after starting API
 ```
 
@@ -84,12 +89,12 @@ uvicorn backend.api.main:app --reload --port 8000
 
 - Containerize backend service; it serves the React UI and API together.
 - Backend can run in Kubernetes or serverless containers.
-- Frontend uses React via CDN and Babel in-browser to avoid Node.js in runtime/build pipeline.
+- Frontend uses a modern React + Vite (Node.js) pipeline and ships static built assets from FastAPI.
 - Persist artifacts (`artifacts/`) to object storage (S3/GCS/Azure Blob) for multi-instance stateless operation.
 
 ## Web + API overview
 
-- `GET /` — Pharma Causality Lab React web app
+- `GET /` — Pharma Causal Lift Model React web app
 - `POST /upload` — upload Excel, schema detection
 - `GET /checklist/{file_id}` — pre-modeling checklist (pass/warn)
 - `GET /eda/{file_id}` — generated month-level EDA package

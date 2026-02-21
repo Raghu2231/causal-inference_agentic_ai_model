@@ -6,7 +6,8 @@ from uuid import uuid4
 
 import pandas as pd
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 from backend.eda.analyzer import run_eda
 from backend.services.lift_engine import LiftComputationEngine
@@ -15,13 +16,21 @@ from backend.utils.checklist import build_variable_checklist
 from backend.utils.schema_detection import detect_schema, schema_to_dict
 from data_contracts.contracts import RunRequest
 
-app = FastAPI(title="Pharma Causality Lab API")
+app = FastAPI(title="Pharma Causal Lift Model API")
 engine = LiftComputationEngine()
+
+FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
+DIST_DIR = FRONTEND_DIR / "dist"
+if (DIST_DIR / "assets").exists():
+    app.mount("/assets", StaticFiles(directory=str(DIST_DIR / "assets")), name="assets")
 
 
 @app.get("/", response_class=HTMLResponse)
-def root() -> str:
-    return (Path(__file__).resolve().parents[2] / "frontend" / "index.html").read_text(encoding="utf-8")
+def root() -> FileResponse | str:
+    built_index = DIST_DIR / "index.html"
+    if built_index.exists():
+        return FileResponse(built_index)
+    return (FRONTEND_DIR / "index.html").read_text(encoding="utf-8")
 
 
 @app.get("/health")
