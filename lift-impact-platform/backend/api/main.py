@@ -25,12 +25,12 @@ if (DIST_DIR / "assets").exists():
     app.mount("/assets", StaticFiles(directory=str(DIST_DIR / "assets")), name="assets")
 
 
-@app.get("/", response_class=HTMLResponse)
-def root() -> FileResponse | str:
+@app.get("/", response_class=HTMLResponse, response_model=None)
+def root():
     built_index = DIST_DIR / "index.html"
     if built_index.exists():
         return FileResponse(built_index)
-    return (FRONTEND_DIR / "index.html").read_text(encoding="utf-8")
+    return HTMLResponse((FRONTEND_DIR / "index.html").read_text(encoding="utf-8"))
 
 
 @app.get("/health")
