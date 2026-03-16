@@ -136,6 +136,16 @@ class FeatureEngineer(ABC):
                     adstock_features
                 ))
             )
+
+            if 'suggestion_adstocked_transformed' in feature_columns_:
+                feature_columns_ = list(
+                    set(feature_columns_)
+                    - {
+                        'suggestion_count',
+                        'suggestion_count_adstock'
+                    }
+                )
+
             logger.debug('Final feature set: %s', feature_columns_)
 
             return feature_columns_
@@ -231,6 +241,7 @@ class FeatureEngineer(ABC):
             'suggestion_type',
             'suggestion_count',
             'suggestion_count_adstock',
+            'suggestion_adstocked_transformed',
             'action_type',
             'action_count',
             'outcome_type',
@@ -306,6 +317,7 @@ class FeatureEngineer(ABC):
             'suggestion_type',
             'suggestion_count',
             'suggestion_count_adstock',
+            'suggestion_adstocked_transformed',
             'action_type',
             'action_count',
             'outcome_type',
@@ -453,7 +465,7 @@ class FeatureEngineer(ABC):
             return df
 
         logger.debug('Running adstocking on DataFrame.')
-        return reduce(
+        adstocked_df: config.Types.DataFrame = reduce(
             lambda sdf, adstock_column: (
                 sdf
                 .transform(
@@ -463,6 +475,20 @@ class FeatureEngineer(ABC):
             ),
             self.model_config.adstock_params.keys(),
             df
+        )
+
+        suggestion_params: Dict[str, float] = self.model_config.adstock_params.get('suggestion_count', {})
+        alpha: float = suggestion_params.get('alpha', 1.0)
+        k: float = suggestion_params.get('k', 1.0)
+
+        if 'suggestion_count_adstock' not in adstocked_df.columns:
+            logger.debug('suggestion_count_adstock not found; skipping logarithmic suggestion transformation.')
+            return adstocked_df
+
+        logger.debug('Applying logarithmic transformation to suggestion_count_adstock with alpha=%s, k=%s', alpha, k)
+        return adstocked_df.withColumn(
+            'suggestion_adstocked_transformed',
+            F.log1p(F.lit(alpha) * F.col('suggestion_count_adstock')) / F.log1p(F.lit(k))
         )
 
     def run(
@@ -861,7 +887,7 @@ class PathATreatmentEffectEngineer(
         r'^covariate_path_[Aa]_(?!.*_triggered_emails_ho_npp$).*',
         r'^propensity_score_path_[Aa]_suggestion_count$',
         r'^percent_other_hcps_suggested(_adstock)?$',
-        r'^suggestion_count(_adstock)?$',
+        r'^(suggestion_count(_adstock)?|suggestion_adstocked_transformed)$',
         # r'^.*_global_index$',
     ]
 
@@ -952,7 +978,7 @@ class PathBTreatmentEffectEngineer(
         r'^covariate_path_[Bb]_.*',
         r'^propensity_score_path_[Bb]_action_count$',
         r'^action_count(_adstock)?$',
-        r'^suggestion_count(_adstock)?$',
+        r'^(suggestion_count(_adstock)?|suggestion_adstocked_transformed)$',
         # r'^.*_global_index$',
     ]
 
