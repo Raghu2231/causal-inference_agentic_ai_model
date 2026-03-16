@@ -164,7 +164,7 @@ class Refinery:
         #         F.lit(0)
         #     )
         #     .withColumn(
-        #         'suggestion_count_adstock',
+        #         'suggestion_adstocked_transformed',
         #         F.lit(0)
         #     )
         #     # TODO zero-out the themes as well
@@ -274,7 +274,7 @@ class Refinery:
                             lambda _column: _column in sdf.columns,
                             [
                                 'suggestion_count',
-                                'suggestion_count_adstock',
+                                'suggestion_adstocked_transformed',
                                 'percent_other_hcps_suggested'
                             ]
                         )
@@ -317,7 +317,7 @@ class Refinery:
                                 lambda _column: _column in sdf.columns,
                                 [
                                     'suggestion_count',
-                                    'suggestion_count_adstock',
+                                    'suggestion_adstocked_transformed',
                                     'percent_other_hcps_suggested',
                                     'action_count',
                                 ]
@@ -406,7 +406,7 @@ class Refinery:
                                 lambda _column: _column in sdf.columns,
                                 [
                                     'suggestion_count',
-                                    'suggestion_count_adstock',
+                                    'suggestion_adstocked_transformed',
                                     'percent_other_hcps_suggested',
                                     'action_count',
                                 ]
@@ -745,7 +745,7 @@ class Refinery:
                         #     # FIXME: this is brittle to running without ad stock
                         #     "predicted_action_count",
                         #     F.when(
-                        #         F.col("suggestion_count_adstock_factual") == 0,
+                        #         F.col("suggestion_adstocked_transformed_factual") == 0,
                         #         F.col("counterfactual_action_count")
                         #     )
                         #     .otherwise(F.col("predicted_action_count"))
@@ -785,7 +785,7 @@ class Refinery:
                     #     # FIXME: this is brittle to running without ad stock
                     #     "predicted_action_count",
                     #     F.when(
-                    #         F.col("suggestion_count_adstock_factual") == 0,
+                    #         F.col("suggestion_adstocked_transformed_factual") == 0,
                     #         F.col("counterfactual_action_count")
                     #     )
                     #     .otherwise(F.col("predicted_action_count"))
@@ -846,7 +846,7 @@ class Refinery:
                         #     # FIXME: this is brittle to running without ad stock
                         #     "predicted_outcome_count",
                         #     F.when(
-                        #         F.col("suggestion_count_adstock_factual") == 0,
+                        #         F.col("suggestion_adstocked_transformed_factual") == 0,
                         #         F.col("counterfactual_outcome_count")
                         #     )
                         #     .otherwise(F.col("predicted_outcome_count"))
@@ -910,7 +910,7 @@ class Refinery:
                     #     # FIXME: this is brittle to running without ad stock
                     #     "predicted_outcome_count",
                     #     F.when(
-                    #         F.col("suggestion_count_adstock_factual") == 0,
+                    #         F.col("suggestion_adstocked_transformed_factual") == 0,
                     #         F.col("counterfactual_outcome_count")
                     #     )
                     #     .otherwise(F.col("predicted_outcome_count"))

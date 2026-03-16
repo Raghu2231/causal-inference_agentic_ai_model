@@ -19,6 +19,8 @@ DEFAULT_ADSTOCK_PARAMS: Dict[str, Dict[str, float]] = {
         "type": "exponential",
         "decay_rate": 0.3,
         "adstock_steps": 4,
+        "alpha": 1.0,
+        "k": 1.0,
     },
     "percent_other_hcps_suggested": {
         "type": "exponential",
