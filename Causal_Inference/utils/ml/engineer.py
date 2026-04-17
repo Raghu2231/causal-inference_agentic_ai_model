@@ -828,7 +828,10 @@ class PathBPropensityEngineer(PathBEngineer):
 
     MODEL_TYPE: str = 'PathB_PropensityModel'
     FEATURE_COLUMN_PATTERNS: Sequence[str] = [
-        r'^CONFOUND_PATH_[Bb]_.*'
+        # Path B confound columns can arrive in either normalized lowercase
+        # (`confound_path_b_*`) or upstream uppercase (`CONFOUND_PATH_B_*`).
+        r'^confound_path_[Bb]_.*',
+        r'^CONFOUND_PATH_[Bb]_.*',
     ]
 
     def _optional_smelting(
@@ -836,6 +839,7 @@ class PathBPropensityEngineer(PathBEngineer):
             df: config.Types.DataFrame,
             **kwargs
     ) -> config.Types.DataFrame:
+        """Aggregate Path B propensity training data to HCP-week grain."""
         logger.debug('Running optional smelting for Path B Propensity Model.')
         return (
             df
